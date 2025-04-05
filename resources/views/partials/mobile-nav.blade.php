@@ -5,7 +5,7 @@
             <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
 
             <div class="logo-box">
-                <a href="index.php" aria-label="logo image"><img src="assets/images/resources/logo-1.png" width="135"
+                <a href="index.php" aria-label="logo image"><img src="{{ asset("assets/images/resources/logo-1.png") }}" width="135"
                         alt="" /></a>
             </div>
             <!-- ..:: /.logo-box  ::.. -->

@@ -3,6 +3,8 @@
 <head>
     {{-- Dynamic title with default fallback --}}
     <title>@yield('title', config('app.name', 'Gallery App'))</title>
+    <meta name="description" content="@yield('description', 'Default description for the gallery app')">
+    <meta name="keywords" content="@yield('keywords', 'gallery, images, photos')">
     
     {{-- Meta tags and head content --}}
     @include('partials.head')
@@ -30,7 +32,7 @@
         @include('partials.header')
         
         {{-- Main content area --}}
-        <main class="pt-5">
+        <main>
             {{-- Dynamic content section --}}
             @yield('content')
             

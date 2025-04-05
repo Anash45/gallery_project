@@ -10,6 +10,8 @@ class Gallery extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     /**
      * The table associated with the model.
      *
@@ -104,6 +106,7 @@ class Gallery extends Model
     // Add this method to your Gallery model
     public function category()
     {
-        return $this->belongsTo(Category::class, 'cat_id', 'central_cid');
+        return $this->belongsTo(Category::class, 'cat_id', 'source_cid')
+                    ->where('db_id', $this->db_id);  // Adding the db_id condition
     }
 }

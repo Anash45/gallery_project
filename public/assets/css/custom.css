@@ -1,3 +1,57 @@
 main{
     min-height: 60vh;
 }
+
+.project-one__content{
+    right: 20px !important;
+}
+
+.project-one__title-box{
+    padding: 16px !important;
+}
+
+.project-one__img img{
+    aspect-ratio: 4/7 !important;
+    filter: unset !important;
+    object-fit: cover !important;
+}
+
+.fw-semibold{
+    font-weight: 600 !important;
+}
+.project-one__img::before{
+    content: unset;
+}
+
+.project-details__pagination .counts{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.project-details__pagination .count a{
+    height: 52px;
+    width: 52px;
+    border-radius: 100px;
+    background-color: rgb(245, 243, 238);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: var(--pitoon-black);
+}
+
+.project-details__pagination .count a:hover,
+.project-details__pagination .count.active a{
+    background-color: var(--pitoon-base);
+}
+
+.project-details__pagination .count a:hover i{
+    background-color: transparent !important;
+}
+
+.team-details__img img{
+    mix-blend-mode: unset;
+}

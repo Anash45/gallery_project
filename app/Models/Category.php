@@ -87,6 +87,7 @@ class Category extends Model
      */
     public function galleryItems()
     {
-        return $this->hasMany(Gallery::class, 'cat_id', 'central_cid');
+        return $this->hasMany(Gallery::class, 'cat_id', 'source_cid')
+                    ->where('db_id', $this->db_id);  // Adding the db_id condition
     }
 }
