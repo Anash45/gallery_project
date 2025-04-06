@@ -10,7 +10,7 @@ main{
     padding: 16px !important;
 }
 
-.project-one__img img{
+.project-one__img img, .ad_img img{
     aspect-ratio: 4/7 !important;
     filter: unset !important;
     object-fit: cover !important;
@@ -55,3 +55,201 @@ main{
 .team-details__img img{
     mix-blend-mode: unset;
 }
+
+.ad_content{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 30px 16px 16px;
+    color: #fff;
+    z-index: 1;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.0));
+}
+
+.ad_img-box{
+    position: relative;
+}
+
+.ad_icon-box{
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    top: 0px;
+    display: flex;
+    align-items: start;
+    justify-content: end;
+    right: 0px;
+    padding: 10px;
+    background-image: linear-gradient(to bottom left, rgba(0, 0, 0, 0.9) 0%,rgba(0, 0, 0, 0.0) 40%);
+}
+.ad_icon{
+    height: 30px;
+}
+
+.ad_title {
+    font-size: 18px;
+    line-height: 120%;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.ad_description {
+    font-size: 12px;
+    line-height: 120%;
+}
+
+.blog-sidebar__title a{
+    color: #fff !important;
+}
+
+
+.blog-sidebar__title a:hover{
+    color: var(--pitoon-base) !important;
+}
+
+.blog-sidebar__img img{
+    mix-blend-mode: unset !important;
+}
+
+.sidebar__post-image img{
+    border-radius: 4px;
+    height: 100px !important;
+    width: 80px !important;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+    filter: unset !important;
+    mix-blend-mode: unset !important;
+}
+
+.blog-details__text-1{
+    color: antiquewhite !important;
+    font-weight: 400 !important;
+}
+
+.blog-details__content *{
+    color: #fafafa !important;
+}
+
+.blog-details__img-box img{
+    mix-blend-mode: unset !important;
+}
+
+/* WP CSS */
+
+/* General Spacing for Block Elements */
+.wp-block {
+    margin-bottom: 1.5rem;  /* Adds bottom margin to all block elements */
+}
+
+/* Section or Group of Blocks */
+.wp-block-group,
+.wp-block-columns {
+    margin-bottom: 2rem;  /* Adds bottom margin between sections/groups */
+}
+
+/* Spacing between blocks in columns */
+.wp-block-column {
+    margin-bottom: 1rem;  /* Adds margin between columns */
+}
+
+/* Paragraph Spacing */
+.wp-block-paragraph {
+    margin-bottom: 1.25rem;  /* Adds spacing between paragraphs */
+}
+
+/* Heading Spacing */
+.wp-block-heading {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;  /* Adds spacing after each heading */
+}
+
+/* Image Spacing */
+.wp-block-image {
+    margin-bottom: 1.5rem;  /* Adds margin below images */
+}
+
+.wp-block-image img {
+    max-width: 100%;  /* Ensures the image doesn't overflow */
+}
+
+/* List Spacing */
+.wp-block-list {
+    margin-bottom: 1.5rem;  /* Adds spacing below lists */
+}
+
+.wp-block-list li {
+    margin-bottom: 0.5rem;  /* Adds spacing between list items */
+}
+
+/* Quote Block Spacing */
+.wp-block-quote {
+    margin-bottom: 2rem;  /* Adds bottom margin for blockquotes */
+}
+
+/* Spacer Block (if using the Spacer block) */
+.wp-block-spacer {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Button Block */
+.wp-block-button {
+    margin-bottom: 1.5rem;  /* Adds margin below buttons */
+}
+
+.wp-block-button__link {
+    padding: 0.75rem 1.5rem;  /* Adds padding for button links */
+}
+
+/* Cover Block */
+.wp-block-cover {
+    margin-bottom: 2rem;  /* Adds margin below cover blocks */
+}
+
+/* Table Block */
+.wp-block-table {
+    margin-bottom: 1.5rem;  /* Adds margin below tables */
+}
+
+/* Gallery Block */
+.wp-block-gallery {
+    margin-bottom: 2rem;  /* Adds margin below galleries */
+}
+
+.wp-block-gallery figure {
+    margin-bottom: 1.5rem;  /* Adds spacing between gallery images */
+}
+
+/* Embed Block */
+.wp-block-embed {
+    margin-bottom: 1.5rem;  /* Adds margin below embedded media */
+}
+
+/* Code Block */
+.wp-block-code {
+    margin-bottom: 1.5rem;  /* Adds bottom margin below code blocks */
+}
+
+/* Separator Block (Horizontal line) */
+.wp-block-separator {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Cover Block Content */
+.wp-block-cover__image-background {
+    margin-bottom: 1.5rem;  /* Adds spacing between cover image and content */
+}
+
+/* Alignment for Centered Content */
+.wp-block-aligncenter {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Alignment for Wide Content */
+.wp-block-alignwide {
+    margin-left: auto;
+    margin-right: auto;
+}
+

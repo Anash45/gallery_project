@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Gallery;
-use Illuminate\Http\Request;
+use App\Models\Ad;
 
 class CategoryController extends Controller
 {
@@ -25,10 +25,14 @@ class CategoryController extends Controller
             ->with('database')
             ->paginate(20);
 
+        // Fetch ads for the category's db_id
+        $ads = Ad::where('db_id', $category->db_id)->get();
+
         // Set the pagination path
         $galleryItems->withPath("/category/{$slug}/");
 
-        // Return the view with the category and gallery items
-        return view('categories.show', compact('category', 'galleryItems'));
+        // Return the view with the category, gallery items, and ads
+        return view('categories.show', compact('category', 'galleryItems', 'ads'));
     }
 }
+

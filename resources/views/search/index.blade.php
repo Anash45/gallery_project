@@ -26,9 +26,35 @@
                 <p class="text-end">Showing {{ $from }} to {{ $to }} of {{ $total }} images on page {{ $currentPage }} of {{ $lastPage }}</p>
             </div>
 
+                    <!-- Gallery Items -->
             <div class="row">
-                @foreach($galleryItems as $item)
+                @php
+                    $imageCount = 0; // Counter for images
+                    $minImagesBeforeAd = rand(5, 8); // Random number between 5 and 8 for minimum images before showing ad
+                @endphp
+
+                @foreach($galleryItems as $index => $item)
                     @include('partials.image_card', ['item' => $item])
+
+                    @php
+                        $imageCount++; // Increment image counter
+                    @endphp
+
+                    <!-- Show ad after every 5-8 images -->
+                    @if ($imageCount >= $minImagesBeforeAd)
+                        @if ($ads->isNotEmpty())
+                            <!-- Display an ad (you can create a separate partial for the ad) -->
+                            @php
+                                $ad = $ads->random();  // Randomly select an ad
+                            @endphp
+                            @include('partials.ad_card', ['ad' => $ad])
+                        @endif
+                        @php
+                            // Reset counter and set a new random number of images before showing the next ad
+                            $imageCount = 0;
+                            $minImagesBeforeAd = rand(5, 8); // Reset for next interval
+                        @endphp
+                    @endif
                 @endforeach
             </div>
 

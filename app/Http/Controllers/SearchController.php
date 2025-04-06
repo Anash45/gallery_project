@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Gallery;
+use App\Models\Ad;
 
 class SearchController extends Controller
 {
@@ -19,9 +20,9 @@ class SearchController extends Controller
             })
             ->with('database')
             ->paginate(20);
-
+        $ads = Ad::get();
         $galleryItems->withPath("/search?q=" . urlencode($query));
 
-        return view('search.index', compact('galleryItems', 'query'));
+        return view('search.index', compact('galleryItems', 'query', 'ads'));
     }
 }

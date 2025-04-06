@@ -29,6 +29,9 @@
                                     @endforeach
                                 </ul>
                             </li>
+                            <li class="{{ request()->is('/blog/') ? 'current' : '' }}">
+                                <a href="{{ route('blog.index') }}">Blog</a>
+                            </li>
                         </ul>
                     </div>
                 </div>

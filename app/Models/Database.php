@@ -61,4 +61,12 @@ class Database extends Model
     {
         return $this->hasMany(Gallery::class, 'db_id', 'id');
     }
+    
+    /**
+     * Get the ads associated with this database.
+     */
+    public function ads()
+    {
+        return $this->hasMany(Ad::class, 'db_id', 'id');
+    }
 }
