@@ -1,11 +1,5 @@
 <section class="page-header mt-0">
 
-    <div class="page-header__shape-1 float-bob-x">
-        <img src="<?php echo asset('assets/images/shapes/page-header-shape-1.png'); ?>" alt="">
-    </div>
-    <div class="page-header__shape-2 float-bob-x">
-        <img src="<?php echo asset('assets/images/shapes/page-header-shape-2.png'); ?>" alt="">
-    </div>
     <div class="page-header__shape-3 float-bob-y">
         <img src="<?php echo asset('assets/images/shapes/page-header-shape-3.png'); ?>" alt="">
     </div>

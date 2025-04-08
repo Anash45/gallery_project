@@ -8,6 +8,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/load-more', [HomeController::class, 'loadMore'])->name('home.loadMore');
+Route::get('/category/', [CategoryController::class, 'index'])
+    ->name('categories.index');
 Route::get('/category/{category}', [CategoryController::class, 'show'])
     ->name('categories.show');
 

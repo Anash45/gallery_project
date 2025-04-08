@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+
 
 use App\Models\Category;
 use App\Models\Gallery;
@@ -16,29 +18,38 @@ class HomeController extends Controller
             // If not cached or cache expired, fetch 12 random images
             return Gallery::where('image_status', 1)
                 ->inRandomOrder()  // Randomly fetch images
-                ->take(14)  // Limit to 12 images
+                ->take(50)  // Limit to 12 images
                 ->get();
         });
 
-        // Get all categories with their latest 8 approved images (custom query without Eloquent relation)
-        $categories = Category::all(); // Get all categories
 
         // Fetch ads for the "recently added" section (randomly from all db_ids)
-        $recentAds = Ad::inRandomOrder()->take(2)->get(); // Fetch 2 random ads
+        $recentAds = Ad::inRandomOrder()->get(); // Fetch 2 random ads
 
-        foreach ($categories as $category) {
-            // Custom query to get 8 most recent images for each category
-            $category->galleryItems = Gallery::where('cat_id', $category->source_cid)
-                ->where('db_id', $category->db_id)
-                ->where('image_status', 1)
-                ->inRandomOrder()
-                ->take(7)
-                ->get();
 
-            // Fetch ads for each category based on db_id
-            $category->ads = Ad::where('db_id', $category->db_id)->inRandomOrder()->take(2)->get();
-        }
-
-        return view('home', compact('recentImages', 'categories', 'recentAds'));
+        return view('home', compact('recentImages', 'recentAds'));
     }
+
+    public function loadMore(Request $request)
+    {
+        $offset = $request->input('offset', 0);
+
+        // Load next 30 images
+        $images = Gallery::where('image_status', 1)
+            ->orderBy('central_id', 'desc')
+            ->skip($offset)
+            ->take(30)
+            ->get();
+
+        $ads = Ad::inRandomOrder()->get();
+
+        // Render partial and return as JSON
+        $html = view('partials.image_with_ads', [
+            'recentImages' => $images,
+            'recentAds' => $ads
+        ])->render();
+
+        return response()->json(['html' => $html]);
+    }
+
 }

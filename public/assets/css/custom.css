@@ -5,17 +5,37 @@ main{
 .project-one__content{
     right: 20px !important;
 }
-
+.main-menu__list>.active a{
+    color: var(--pitoon-base) !important;
+}
 .project-one__title-box{
     padding: 16px !important;
 }
+.page-header {
+    padding: 150px 0 50px !important;
+}
+.project-one__img-box,.ad_single{
+    display: block;
+    border-radius: 16px !important;
+    overflow: hidden;
+    width: 120px !important;
+}
 
+.project-one__category .project-one__img-box{
+    width: 100% !important;
+}
+.project-one__single{
+    width: 100%;
+}
 .project-one__img img, .ad_img img{
+    width: 100% !important;
     aspect-ratio: 4/7 !important;
     filter: unset !important;
     object-fit: cover !important;
 }
-
+.project-one__img-box::after{
+    background-color: transparent !important;
+}
 .fw-semibold{
     font-weight: 600 !important;
 }
@@ -61,7 +81,7 @@ main{
     left: 0;
     bottom: 0;
     width: 100%;
-    padding: 30px 16px 16px;
+    padding: 10px;
     color: #fff;
     z-index: 1;
     background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 80%, rgba(0, 0, 0, 0.0));
@@ -80,7 +100,7 @@ main{
     align-items: start;
     justify-content: end;
     right: 0px;
-    padding: 10px;
+    padding: 5px;
     background-image: linear-gradient(to bottom left, rgba(0, 0, 0, 0.9) 0%,rgba(0, 0, 0, 0.0) 40%);
 }
 .ad_icon{
@@ -88,13 +108,13 @@ main{
 }
 
 .ad_title {
-    font-size: 18px;
+    font-size: 14px;
     line-height: 120%;
     font-weight: 600;
     margin-bottom: 8px;
 }
 .ad_description {
-    font-size: 12px;
+    font-size: 10px;
     line-height: 120%;
 }
 
@@ -253,3 +273,8 @@ main{
     margin-right: auto;
 }
 
+
+
+.row>.col{
+    flex-grow: 0;
+}

@@ -1,4 +1,4 @@
-<div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
+<div class="col">
     <a href="{{ $ad->link }}" class="ad_single">
         <div class="ad_img-box">
             <div class="ad_icon-box">

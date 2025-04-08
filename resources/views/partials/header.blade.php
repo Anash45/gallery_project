@@ -14,22 +14,13 @@
                     <div class="main-menu__main-menu-box mx-auto">
                         <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                         <ul class="main-menu__list">
-                            <li class="{{ request()->is('/') ? 'current' : '' }}">
+                            <li class="{{ request()->is('/') ? 'active' : '' }}">
                                 <a href="{{ url('/') }}">Home</a>
                             </li>
-                            <li class="dropdown {{ request()->is('category*') ? 'current' : '' }}">
-                                <a href="#">Categories</a>
-                                <ul class="sub-menu">
-                                    @foreach($categories as $category)
-                                        <li>
-                                            <a href="{{ url('/category/' . $category->slug) }}">
-                                                {{ $category->category_name }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                            <li class="{{ request()->is('category*') ? 'active' : '' }}">
+                                <a href="{{ route('categories.index') }}">Categories</a>
                             </li>
-                            <li class="{{ request()->is('/blog/') ? 'current' : '' }}">
+                            <li class="{{ request()->is('/blog/') ? 'active' : '' }}">
                                 <a href="{{ route('blog.index') }}">Blog</a>
                             </li>
                         </ul>

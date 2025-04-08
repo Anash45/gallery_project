@@ -8,6 +8,15 @@ use App\Models\Ad;
 
 class CategoryController extends Controller
 {
+    public function index()
+    {
+        // Fetch all categories with their databases
+        $categories = Category::with('database')->get();
+
+        // Return the view with the categories
+        return view('categories.index', compact('categories'));
+    }
+    
     public function show($slug)
     {
         // Get the category with its database

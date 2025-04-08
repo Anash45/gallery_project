@@ -8,7 +8,7 @@
 @php
     $Title='Home';
     $Title2 = 'Category';
-    $SubTitle = "Image Details";
+    $SubTitle = $image->image_name;
 
 @endphp
 @include('partials.Page_Header')
@@ -47,6 +47,12 @@
                             </li>
                         </ul>
                         <a href="{{ route('image.download', $image->slug) }}" class="thm-btn login-page__form-btn">Download <i class="fa fa-download ms-2"></i></a>
+                        <div id="play-store-button" class="mt-3" style="">
+                            <a href="#">
+                                <img src="{{ asset('/assets/images/play-store-button.webp') }}" style="height: 55px;" />
+                            </a>
+                        </div>
+
                         <div class="blog-details__bottom">
                             <p class="blog-details__tags gap-1 d-flex flex-wrap">
                                 <span class="text-white">Tags</span>
@@ -61,3 +67,13 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if (isAndroid) {
+            document.getElementById('play-store-button').style.display = 'block';
+        }
+    });
+</script>
+@endpush
