@@ -39,7 +39,8 @@ class Database extends Model
         'database_name',
         'base_url',
         'host',
-        'source_db'
+        'source_db',
+        'packageName'
     ];
 
     /**
@@ -61,7 +62,7 @@ class Database extends Model
     {
         return $this->hasMany(Gallery::class, 'db_id', 'id');
     }
-    
+
     /**
      * Get the ads associated with this database.
      */

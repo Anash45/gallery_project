@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Gallery;
-use App\Models\Ad;
+use Illuminate\Support\Facades\Http;
 
 class CategoryController extends Controller
 {
@@ -35,13 +35,43 @@ class CategoryController extends Controller
             ->paginate(20);
 
         // Fetch ads for the category's db_id
-        $ads = Ad::where('db_id', $category->db_id)->get();
+        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id);
+
+        $adInterval = 6;
+        if ($response->successful()) {
+            $adInterval = $response->json()['wallpaper_number'];
+        }
+
+        $ads = $this->fetchAdsForCount(count($galleryItems),$adInterval, $category->id);
 
         // Set the pagination path
         $galleryItems->withPath("/category/{$slug}/");
 
         // Return the view with the category, gallery items, and ads
-        return view('categories.show', compact('category', 'galleryItems', 'ads'));
+        return view('categories.show', compact('category', 'galleryItems', 'ads', 'adInterval'));
+    }
+
+    protected function fetchAdsForCount($requiredCount, $adInterval, $categoryId)
+    {
+        // Calculate the required number of ads based on 1 ad for every 5 images
+        $requiredAdsCount = ceil($requiredCount / $adInterval);
+
+        $ads = [];
+
+        // Fetch ads repeatedly until we have enough
+        while (count($ads) < $requiredAdsCount) {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId);
+
+            if ($response->successful()) {
+                $fetchedAds = $response->json()['ads'];
+
+                // Merge fetched ads without duplicates
+                $ads = array_merge($ads, $fetchedAds);
+            }
+        }
+
+        // Trim the ads array to the required number of ads
+        return array_slice($ads, 0, $requiredAdsCount);
     }
 }
 

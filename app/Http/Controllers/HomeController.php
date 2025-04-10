@@ -1,34 +1,37 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-
-
-use App\Models\Category;
+use Illuminate\Support\Facades\Http;
 use App\Models\Gallery;
-use App\Models\Ad; // Import the Ad model
 use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Check if cached images for recently added exist and if they are still valid (within 24 hours)
+        // Cache the recently added images (valid for 24 hours)
         $recentImages = Cache::remember('recent_images', 60 * 24, function () {
-            // If not cached or cache expired, fetch 12 random images
             return Gallery::where('image_status', 1)
-                ->inRandomOrder()  // Randomly fetch images
-                ->take(50)  // Limit to 12 images
+                ->inRandomOrder()
+                ->take(30)
                 ->get();
         });
 
+        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
 
-        // Fetch ads for the "recently added" section (randomly from all db_ids)
-        $recentAds = Ad::inRandomOrder()->get(); // Fetch 2 random ads
+        $adInterval = 6;
+        if ($response->successful()) {
+            $adInterval = $response->json()['wallpaper_number'];
+        }
 
+        // Fetch enough ads from the external API
+        $recentAds = $this->fetchAdsForCount(count($recentImages), $adInterval);
 
-        return view('home', compact('recentImages', 'recentAds'));
+        return view('home', compact('recentImages', 'recentAds', 'adInterval'));
     }
+
 
     public function loadMore(Request $request)
     {
@@ -38,18 +41,52 @@ class HomeController extends Controller
         $images = Gallery::where('image_status', 1)
             ->orderBy('central_id', 'desc')
             ->skip($offset)
-            ->take(30)
+            ->take(20)
             ->get();
 
-        $ads = Ad::inRandomOrder()->get();
+
+        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
+
+        $adInterval = 6;
+        if ($response->successful()) {
+            $adInterval = $response->json()['wallpaper_number'];
+        }
+
+        // Fetch enough ads for 30 images
+        $ads = $this->fetchAdsForCount(count($images),$adInterval);
 
         // Render partial and return as JSON
         $html = view('partials.image_with_ads', [
             'recentImages' => $images,
-            'recentAds' => $ads
+            'recentAds' => $ads,
+            'adInterval' => $adInterval
         ])->render();
 
         return response()->json(['html' => $html]);
+    }
+
+
+    protected function fetchAdsForCount($requiredCount, $adInterval)
+    {
+        // Calculate the required number of ads based on 1 ad for every 5 images
+        $requiredAdsCount = ceil($requiredCount / $adInterval);
+
+        $ads = [];
+
+        // Fetch ads repeatedly until we have enough
+        while (count($ads) < $requiredAdsCount) {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
+
+            if ($response->successful()) {
+                $fetchedAds = $response->json()['ads'];
+
+                // Merge fetched ads without duplicates
+                $ads = array_merge($ads, $fetchedAds);
+            }
+        }
+
+        // Trim the ads array to the required number of ads
+        return array_slice($ads, 0, $requiredAdsCount);
     }
 
 }

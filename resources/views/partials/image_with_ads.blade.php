@@ -1,7 +1,8 @@
 @php
-    $adInsertInterval = 5;
+    $adInsertInterval = $adInterval ?? 6;
     $adIndex = 0;
-    $adsCount = $recentAds->count();
+    $adsArray = $recentAds ?? []; // Get the 'ads' array
+    $adsCount = count($adsArray);
 @endphp
 
 @foreach($recentImages as $index => $item)
@@ -9,7 +10,7 @@
 
     @if(($index + 1) % $adInsertInterval === 0 && $adsCount > 0)
         @php
-            $ad = $recentAds[$adIndex % $adsCount];
+            $ad = $adsArray[$adIndex % $adsCount];
             $adIndex++;
         @endphp
         @include('partials.ad_card', ['ad' => $ad])
