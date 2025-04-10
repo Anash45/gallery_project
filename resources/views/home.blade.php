@@ -8,7 +8,7 @@
         <div class="section-title text-center mt-5">
             <h2 class="section-title__title">Recently Added</h2>
         </div>
-        <div class="row" id="image-wrapper">
+        <div class="row justify-content-center" id="image-wrapper">
             @include('partials.image_with_ads', ['recentImages' => $recentImages, 'recentAds' => $recentAds])
         </div>
 

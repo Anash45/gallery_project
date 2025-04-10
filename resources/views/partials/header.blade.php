@@ -11,7 +11,7 @@
                     <div class="main-menu__logo">
                         <a href="{{ url('/') }}"><img src="{{ asset('assets/images/resources/logo-1.png') }}" alt=""></a>
                     </div>
-                    <div class="main-menu__main-menu-box mx-auto">
+                    <div class="main-menu__main-menu-box mx-md-auto ms-auto">
                         <a href="#" class="mobile-nav__toggler"><i class="fa fa-bars"></i></a>
                         <ul class="main-menu__list">
                             <li class="{{ request()->is('/') ? 'active' : '' }}">
