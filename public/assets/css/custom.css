@@ -311,6 +311,24 @@ main {
     flex-grow: 0;
 }
 
+.psc{
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.psc .custom-search-form{
+    background-color: transparent !important;
+    overflow: visible !important;
+}
+
+.psc .contact-page__input-box{
+    margin-bottom: 0 !important;
+}
+
+.psc.search-popup__content .thm-btn{
+    height: 66px !important;
+    width: 66px !important;
+}
 @media (max-width:768px) {
 
     .custom-cursor__cursor,

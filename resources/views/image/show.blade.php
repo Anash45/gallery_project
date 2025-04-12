@@ -14,58 +14,106 @@
 @include('partials.Page_Header')
 
 <section class="team-details">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6">
-                    <div class="team-details__left">
-                        <div class="team-details__img">
-                            <img src="{{ $image->database->base_url }}upload/{{ $image->image }}" alt="">
-                        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6">
+                <div class="team-details__left">
+                    <div class="team-details__img">
+                        <img src="{{ $image->database->base_url }}upload/{{ $image->image }}" alt="">
                     </div>
                 </div>
-                <div class="col-xl-6 col-lg-6">
-                    <div class="team-details__right">
-                        <h3 class="team-details__name text-white">{{ $image->image_name }}</h3>
-                        <a href="{{ route('categories.show', $category->slug) }}" class="team-details__sub-title text-white text-decoration-underline">{{ $category->category_name }}</a>
-                        <p class="team-details__text-1 text-white">{{ $image->description }}</p>
-                        <div class="border-bottom mb-3"></div>
-                        <ul class="ps-0 list-unstyled mb-3">
-                            <li>
-                                <div class="d-flex items-center gap-2 text-white">
-                                    <strong>Size: </strong> <p>{{ $image->image_size }}</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="d-flex items-center gap-2 text-white">
-                                    <strong>Resolution: </strong> <p>{{ $image->image_resolution }}</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="d-flex items-center gap-2 text-white">
-                                    <strong>Extension: </strong> <p>{{ $image->image_extension }}</p>
-                                </div>
-                            </li>
-                        </ul>
-                        <a href="{{ route('image.download', $image->slug) }}" class="thm-btn login-page__form-btn">Download <i class="fa fa-download ms-2"></i></a>
-                        <div id="play-store-button" class="mt-3" style="">
-                            <a href="#">
-                                <img src="{{ asset('/assets/images/play-store-button.webp') }}" style="height: 55px;" />
-                            </a>
-                        </div>
+            </div>
+            <div class="col-xl-6 col-lg-6">
+                <div class="team-details__right">
+                    <h3 class="team-details__name text-white">{{ $image->image_name }}</h3>
+                    <a href="{{ route('categories.show', $category->slug) }}" class="team-details__sub-title text-white text-decoration-underline">{{ $category->category_name }}</a>
+                    <p class="team-details__text-1 text-white">{{ $image->description }}</p>
+                    <div class="border-bottom mb-3"></div>
+                    <ul class="ps-0 list-unstyled mb-3">
+                        <li>
+                            <div class="d-flex items-center gap-2 text-white">
+                                <strong>Size: </strong> <p>{{ $image->image_size }}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex items-center gap-2 text-white">
+                                <strong>Resolution: </strong> <p>{{ $image->image_resolution }}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex items-center gap-2 text-white">
+                                <strong>Extension: </strong> <p>{{ $image->image_extension }}</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="{{ route('image.download', $image->slug) }}" class="thm-btn login-page__form-btn">Download <i class="fa fa-download ms-2"></i></a>
+                    <div class="mt-3">
+                        <button type="button" class="thm-btn border-0" data-bs-toggle="modal" data-bs-target="#shareModal"
+                            onclick="prepareShareModal('{{ $image->title }}', '{{ url()->current() }}')">
+                            <i class="fa fa-share-square"></i> Share
+                        </button>
+                    </div>
 
-                        <div class="blog-details__bottom">
-                            <p class="blog-details__tags gap-1 d-flex flex-wrap">
-                                <span class="text-white">Tags</span>
-                                @foreach(explode(",",$image->tags) as $tag)
-                                    <a href="{{ route('search', ['q' => trim($tag)]) }}" class="mx-0">{{ $tag }}</a>
-                                @endforeach
-                            </p>
-                        </div>
+                    <div id="play-store-button" class="mt-3" style="display: none;">
+                        <a href="#">
+                            <img src="{{ asset('/assets/images/play-store-button.webp') }}" style="height: 55px;" />
+                        </a>
+                    </div>
+
+                    <div class="blog-details__bottom">
+                        <p class="blog-details__tags gap-1 d-flex flex-wrap">
+                            <span class="text-white">Tags</span>
+                            @foreach(explode(",",$image->tags) as $tag)
+                            <a href="{{ route('search', ['query' => urlencode(trim($tag))]) }}" class="mx-0">{{ $tag }}</a>
+                            @endforeach
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<section class="projects-page mt-5">
+    <div class="container">
+        <div class="section-title text-center mt-4">
+            <h2 class="section-title__title">Related Images</h2>
+        </div>
+        <div class="row justify-content-center" id="related-image-wrapper"></div>
+        <div id="related-loader" class="text-center my-4" style="display: none;">
+            <p>Loading related images...</p>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share this image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="d-flex justify-content-center gap-3 mb-3 fs-4">
+                    <a id="share-whatsapp" href="#" target="_blank" class="text-success">
+                        <i class="fab fa-whatsapp" style="font-size: 36px;"></i>
+                    </a>
+                    <a id="share-facebook" href="#" target="_blank" class="text-primary">
+                        <i class="fab fa-facebook" style="font-size: 36px;"></i>
+                    </a>
+                    <a id="share-twitter" href="#" target="_blank" class="text-info">
+                        <i class="fab fa-twitter" style="font-size: 36px;"></i>
+                    </a>
+                    <a id="share-telegram" href="#" target="_blank" class="text-primary">
+                        <i class="fab fa-telegram" style="font-size: 36px;"></i>
+                    </a>
+                </div>
+                <button class="thm-btn w-100 border-0 py-2 mt-2" onclick="openNativeShare()">
+                    <i class="fas fa-share-alt me-1"></i> More...
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @push('scripts')
 <script>
@@ -76,4 +124,65 @@
         }
     });
 </script>
+@endpush
+@push('scripts')
+<script>
+    let relatedOffset = 0;
+    let relatedLoading = false;
+
+    const loadRelatedImages = () => {
+        if (relatedLoading) return;
+        relatedLoading = true;
+        document.getElementById('related-loader').style.display = 'block';
+
+        fetch(`/image/{{ $image->slug }}/related?offset=${relatedOffset}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.html.trim() !== '') {
+                    document.getElementById('related-image-wrapper').insertAdjacentHTML('beforeend', data.html);
+                    relatedOffset += 12;
+                    relatedLoading = false;
+                    document.getElementById('related-loader').style.display = 'none';
+                }
+            });
+    };
+
+    // Initial load
+    loadRelatedImages();
+
+    // Optional: load more on scroll within page
+    window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300 && !relatedLoading) {
+            loadRelatedImages();
+        }
+    });
+</script>
+<script>
+    function prepareShareModal(title, url) {
+        document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`;
+        document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+        document.getElementById('share-telegram').href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+    }
+
+    function openNativeShare() {
+        const title = document.title;
+        const url = window.location.href;
+
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).then(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('shareModal'));
+                modal.hide();
+            }).catch(err => {
+                console.log('Error sharing:', err);
+            });
+        } else {
+            alert("Your browser doesn't support native sharing.");
+        }
+    }
+</script>
+
 @endpush

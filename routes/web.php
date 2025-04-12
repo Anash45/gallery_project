@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
@@ -9,15 +8,18 @@ use App\Http\Controllers\BlogController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/load-more', [HomeController::class, 'loadMore'])->name('home.loadMore');
-Route::get('/category/', [CategoryController::class, 'index'])
-    ->name('categories.index');
-Route::get('/category/{category}', [CategoryController::class, 'show'])
-    ->name('categories.show');
+Route::get('/category/', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/category/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
-Route::get('/search', [SearchController::class, 'index'])->name('search');
+// Search route (defined before image route to avoid conflicts)
+Route::get('/search/{query}/', [SearchController::class, 'index'])->name('search');
 
+// Image route
 Route::get('/image/{slug}', [ImageController::class, 'show'])
     ->name('image.show');
+Route::get('/image/{slug}/related', [ImageController::class, 'loadRelated'])->name('image.related');
+
+// Image download route
 Route::get('/download/{slug}', [ImageController::class, 'download'])->name('image.download');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');

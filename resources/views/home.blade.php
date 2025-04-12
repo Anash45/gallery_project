@@ -5,7 +5,8 @@
 @section('content')
 <section class="projects-page">
     <div class="container">
-        <div class="section-title text-center mt-5">
+        @include('partials.search-container')
+        <div class="section-title text-center mt-4">
             <h2 class="section-title__title">Recently Added</h2>
         </div>
         <div class="row justify-content-center" id="image-wrapper">

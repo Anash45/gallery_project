@@ -1,7 +1,7 @@
 @php
     $adInsertInterval = $adInterval ?? 6;
     $adIndex = 0;
-    $adsArray = $recentAds ?? []; // Get the 'ads' array
+    $adsArray = $recentAds ?? [];
     $adsCount = count($adsArray);
 @endphp
 

@@ -6,7 +6,11 @@
                 @if ($galleryItems->onFirstPage())
                     <li class="count disabled"><a href="#"><i class="icon-left-arrow"></i></a></li>
                 @else
-                    <li class="count"><a href="{{ $galleryItems->previousPageUrl() }}"><i class="icon-left-arrow"></i></a></li>
+                    <li class="count">
+                        <a href="{{ isset($query) ? str_replace('%2B', '+', $galleryItems->previousPageUrl()) : $galleryItems->previousPageUrl() }}">
+                            <i class="icon-left-arrow"></i>
+                        </a>
+                    </li>
                 @endif
 
                 {{-- Pagination Elements --}}
@@ -25,10 +29,10 @@
                     }
                 @endphp
 
-                {{-- Loop through the range and display page numbers --}}
+                {{-- Pagination Elements --}}
                 @for ($page = $start; $page <= $end; $page++)
                     <li class="count @if ($page == $currentPage) active @endif">
-                        <a href="{{ $galleryItems->url($page) }}">
+                        <a href="{{ isset($query) ? str_replace('%2B', '+', $galleryItems->url($page)) : $galleryItems->url($page) }}">
                             <span>{{ $page }}</span>
                         </a>
                     </li>
@@ -41,7 +45,11 @@
 
                 {{-- Next Page Link --}}
                 @if ($galleryItems->hasMorePages())
-                    <li class="count"><a href="{{ $galleryItems->nextPageUrl() }}"><i class="icon-right-arrow"></i></a></li>
+                    <li class="count">
+                        <a href="{{ isset($query) ? str_replace('%2B', '+', $galleryItems->nextPageUrl()) : $galleryItems->nextPageUrl() }}">
+                            <i class="icon-right-arrow"></i>
+                        </a>
+                    </li>
                 @else
                     <li class="count disabled"><a href="#"><i class="icon-right-arrow"></i></a></li>
                 @endif

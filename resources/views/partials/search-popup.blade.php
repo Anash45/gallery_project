@@ -1,14 +1,14 @@
 <div class="search-popup">
     <div class="search-popup__overlay search-toggler"></div>
-    <!-- ..:: /.search-popup__overlay  ::.. -->
     <div class="search-popup__content">
-        <form action="{{ route('search') }}" method="GET">
+        <form id="custom-search-form" class="custom-search-form" action="" method="GET">
             <label for="search" class="sr-only">search here</label>
             <input
                 type="text"
                 id="search"
+                class="search-input"
                 name="q"
-                value="{{ request('q') }}"
+                value="{{ $query ?? ""}}"
                 placeholder="Search Here..."
                 required
             />
@@ -17,5 +17,7 @@
             </button>
         </form>
     </div>
-    <!-- ..:: /.search-popup__content  ::.. -->
 </div>
+
+@push('scripts')
+@endpush

@@ -64,6 +64,26 @@
     {{-- Additional scripts from child views --}}
     @stack('scripts')
     
+    <script>
+        $(document).ready(function () {
+            // Handle multiple search forms with the class '.custom-search-form'
+            $('.custom-search-form').on('submit', function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Find the search input inside the form
+                const searchInput = $(this).find('.search-input');
+                const query = searchInput.val().trim();
+
+                if (query) {
+                    // Encoding the query without replacing spaces with '+'
+                    const encodedQuery = encodeURIComponent(query);
+
+                    // Redirecting to the search page with the encoded query
+                    window.location.href = `/search/${encodedQuery}/`;
+                }
+            });
+        });
+    </script>
     {{-- Inline scripts if needed --}}
     @stack('inline-scripts')
 </body>
