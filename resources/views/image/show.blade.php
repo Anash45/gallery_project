@@ -13,7 +13,7 @@
 @endphp
 @include('partials.Page_Header')
 
-<section class="team-details">
+<section class="team-details border-bottom-0">
     <div class="container">
         <div class="row">
             <div class="col-xl-6 col-lg-6">
@@ -73,7 +73,7 @@
         </div>
     </div>
 </section>
-<section class="projects-page mt-5">
+<section class="projects-page mt-0 pt-0">
     <div class="container">
         <div class="section-title text-center mt-4">
             <h2 class="section-title__title">Related Images</h2>
