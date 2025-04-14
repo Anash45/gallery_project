@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\Search;
 use App\Models\Gallery;
 use App\Models\Ad;
 
@@ -12,6 +13,20 @@ class SearchController extends Controller
     public function index(Request $request, $query)
     {
         $query = urldecode($query);
+        $normalizedQuery = strtolower(trim($query));
+
+        // Check if search already exists
+        $search = Search::where('query', $normalizedQuery)->first();
+
+        if ($search) {
+            $search->increment('count');
+        } else {
+            Search::create([
+                'query' => $normalizedQuery,
+                'count' => 1
+            ]);
+        }
+
         $sort = $request->get('sort', 'newest'); // Default to newest
 
         $galleryQuery = Gallery::where('image_status', 1)

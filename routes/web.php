@@ -5,10 +5,12 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\LikeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/load-more', [HomeController::class, 'loadMore'])->name('home.loadMore');
 Route::get('/category/', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/subcategory/{category}', [CategoryController::class, 'sub'])->name('categories.sub');
 Route::get('/category/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
 // Search route (defined before image route to avoid conflicts)
@@ -24,3 +26,5 @@ Route::get('/download/{slug}', [ImageController::class, 'download'])->name('imag
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+
+Route::post('/like-image', [LikeController::class, 'toggleLike'])->name('like.image');

@@ -30,7 +30,10 @@ class ImageController extends Controller
             ->unique()
             ->values();
 
-        return view('image.show', compact('image', 'category', 'relatedTags'));
+        // Get categories from other databases (exclude this image's db)
+        $otherCategories = Category::where('db_id', '!=', $image->db_id)->get()->take(3);
+
+        return view('image.show', compact('image', 'category', 'relatedTags', 'otherCategories'));
     }
 
     public function loadRelated(Request $request, $slug)

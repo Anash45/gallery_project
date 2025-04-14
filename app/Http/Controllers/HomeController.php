@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Search;
 
 class HomeController extends Controller
 {
@@ -28,8 +29,13 @@ class HomeController extends Controller
 
         // Fetch enough ads from the external API
         $recentAds = $this->fetchAdsForCount(count($recentImages), $adInterval);
+        
+        // Get top 10 trending searches (most searched)
+        $trendingSearches = Search::orderBy('count', 'desc')
+        ->limit(10)
+        ->pluck('query');
 
-        return view('home', compact('recentImages', 'recentAds', 'adInterval'));
+        return view('home', compact('recentImages', 'recentAds', 'adInterval', 'trendingSearches'));
     }
 
 

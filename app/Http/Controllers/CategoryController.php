@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Database;
 use App\Models\Category;
 use App\Models\Gallery;
 use Illuminate\Support\Facades\Http;
@@ -11,10 +12,22 @@ class CategoryController extends Controller
     public function index()
     {
         // Fetch all categories with their databases
-        $categories = Category::with('database')->get();
+        $categories = Database::get();
 
         // Return the view with the categories
         return view('categories.index', compact('categories'));
+    }
+    public function sub($slug)
+    {
+        $category = Database::whereSlug($slug)
+            ->firstOrFail();
+
+        // Fetch all categories with their databases
+        $categories = Category::where('db_id', $category->id)
+        ->with('database')->get();
+
+        // Return the view with the categories
+        return view('categories.sub', compact('categories'));
     }
     
     public function show($slug)

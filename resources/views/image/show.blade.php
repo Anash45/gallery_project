@@ -25,7 +25,19 @@
             </div>
             <div class="col-xl-6 col-lg-6">
                 <div class="team-details__right">
-                    <h3 class="team-details__name text-white">{{ $image->image_name }}</h3>
+                @php
+                    // Get liked images from the cookie
+                    $likedImages = json_decode(Cookie::get('liked_images', '[]'), true);
+                    //print_r($likedImages);
+                @endphp
+                    <div class="d-flex gap-3 justify-content-between align-items-center">
+                        <h3 class="team-details__name text-white">{{ $image->image_name }}</h3>
+                        <!-- Like Button -->
+                        <i class="fa fa-thumbs-up h3 cursor-pointer {{ in_array($image->slug, $likedImages ?? []) ? 'text-thm' : '' }}" 
+                            onclick="toggleLike('{{ $image->slug }}')"
+                            id="like-button-{{ $image->slug }}">
+                        </i>
+                    </div>
                     <a href="{{ route('categories.show', $category->slug) }}" class="team-details__sub-title text-white text-decoration-underline">{{ $category->category_name }}</a>
                     <p class="team-details__text-1 text-white">{{ $image->description }}</p>
                     <div class="border-bottom mb-3"></div>
@@ -38,6 +50,16 @@
                         <li>
                             <div class="d-flex items-center gap-2 text-white">
                                 <strong>Resolution: </strong> <p>{{ $image->image_resolution }}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex items-center gap-2 text-white">
+                                <strong>Views: </strong> <p>{{ $image->view_count }}</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex items-center gap-2 text-white">
+                                <strong>Downloaded: </strong> <p>{{ $image->download_count }}</p>
                             </div>
                         </li>
                         <li>
@@ -68,6 +90,17 @@
                             @endforeach
                         </p>
                     </div>
+
+                    @if (count($otherCategories) > 0)
+                        <div class="d-flex flex-wrap items-center gap-2">
+                            @foreach ($otherCategories as $oc )
+                                <a href="{{ route('categories.show', $oc->slug) }}" class="thm-btn border-0">
+                                    <span>{{ $oc->category_name }}</span>
+                                    <i class="fas fa-external-link-alt ms-1"></i>
+                                </a>
+                            @endforeach     
+                        </div>               
+                    @endif
                 </div>
             </div>
         </div>
@@ -184,5 +217,32 @@
         }
     }
 </script>
+<script>
+function toggleLike(slug) {
+    // Send an AJAX request to toggle like/unlike
+    fetch('{{ route('like.image') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({ slug: slug })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update icon color based on liked state
+        const button = document.getElementById('like-button-' + slug);
+        if (data.liked) {
+            button.classList.add('text-thm');
+        } else {
+            button.classList.remove('text-thm');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}    
+</script>
+
 
 @endpush

@@ -5,7 +5,7 @@
     <title>@yield('title', config('app.name', 'Gallery App'))</title>
     <meta name="description" content="@yield('description', 'Default description for the gallery app')">
     <meta name="keywords" content="@yield('keywords', 'gallery, images, photos')">
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- Meta tags and head content --}}
     @include('partials.head')
     
