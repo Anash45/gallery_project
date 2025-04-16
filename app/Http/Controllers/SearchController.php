@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PlatformHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Search;
@@ -61,7 +62,13 @@ class SearchController extends Controller
         $galleryItems->withPath("/search/" . urlencode(str_replace(' ', '+', $query)) . "/")->appends(['sort' => $sort]);
 
         // Ads logic
-        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
+
+
+        if (PlatformHelper::isAndroid()) {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=android');
+        } else {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=other');
+        }
         $adInterval = 6;
         if ($response->successful()) {
             $adInterval = $response->json()['wallpaper_number'];
@@ -100,7 +107,12 @@ class SearchController extends Controller
 
         // Fetch ads repeatedly until we have enough
         while (count($ads) < $requiredAdsCount) {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
+
+            if (PlatformHelper::isAndroid()) {
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=android');
+            } else {
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=other');
+            }
 
             if ($response->successful()) {
                 $fetchedAds = $response->json()['ads'];

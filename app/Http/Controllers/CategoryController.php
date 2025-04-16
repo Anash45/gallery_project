@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PlatformHelper;
 use App\Models\Database;
 use App\Models\Category;
 use App\Models\Gallery;
@@ -48,7 +49,13 @@ class CategoryController extends Controller
             ->paginate(20);
 
         // Fetch ads for the category's db_id
-        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id);
+        
+
+        if (PlatformHelper::isAndroid()) {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id.'&platform=android');
+        } else {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id.'&platform=other');
+        }
 
         $adInterval = 6;
         if ($response->successful()) {
@@ -73,7 +80,12 @@ class CategoryController extends Controller
 
         // Fetch ads repeatedly until we have enough
         while (count($ads) < $requiredAdsCount) {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId);
+
+            if (PlatformHelper::isAndroid()) {
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId.'&platform=android');
+            } else {
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId.'&platform=other');
+            }
 
             if ($response->successful()) {
                 $fetchedAds = $response->json()['ads'];
