@@ -8,7 +8,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LikeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/load-more', [HomeController::class, 'loadMore'])->name('home.loadMore');
+Route::post('/load-more', [HomeController::class, 'loadMore'])->name('home.loadMore');
 Route::get('/category/', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/subcategory/{category}', [CategoryController::class, 'sub'])->name('categories.sub');
 Route::get('/category/{category}', [CategoryController::class, 'show'])->name('categories.show');
@@ -19,7 +19,8 @@ Route::get('/search/{query}/', [SearchController::class, 'index'])->name('search
 // Image route
 Route::get('/image/{slug}', [ImageController::class, 'show'])
     ->name('image.show');
-Route::get('/image/{slug}/related', [ImageController::class, 'loadRelated'])->name('image.related');
+Route::post('/image/{slug}/related', [ImageController::class, 'loadRelated'])->name('image.related');
+
 
 // Image download route
 Route::get('/download/{slug}', [ImageController::class, 'download'])->name('image.download');

@@ -10,10 +10,10 @@
             <div class="section-title text-center mt-5">
                 <h2 class="section-title__title">Categories</h2>
             </div>
-            <div class="row">
+            <div class="row categories-row">
 
                 @foreach($categories as $category)
-                <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6">
+                <div class="col-lg-3 col-md-4 col-sm-6">
                     <a href="/subcategory/{{ $category->slug }}" class="project-one__single project-one__category">
                         <div class="project-one__img-box">
                             <div class="project-one__img">

@@ -32,7 +32,7 @@
         </div>
 
         <!-- Gallery Items + Ads -->
-        <div class="row">
+        <div class="row justify-content-center gallery-row">
             @php
                 $adInsertInterval = $adInterval ?? 6;
                 $adIndex = 0;

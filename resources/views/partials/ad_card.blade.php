@@ -1,5 +1,5 @@
 <div class="col">
-    <a href="{{ $ad['link_url'] }}" class="ad_single" target="_blank" rel="noopener">
+    <a href="{{ $ad['link_url'] }}" class="ad_single" target="_blank" rel="noopener" platform="{{ $ad['type'] }}">
         <div class="ad_img-box">
             <div class="ad_icon-box">
                 <img src="{{ asset('/assets/images/ad.png') }}" class="ad_icon" />

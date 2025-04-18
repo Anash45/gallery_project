@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PlatformHelper;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Gallery;
@@ -39,6 +40,7 @@ class ImageController extends Controller
     public function loadRelated(Request $request, $slug)
     {
         $offset = $request->input('offset', 0);
+        $loadedIds = $request->input('loadedIds', []); // get already loaded central_id's
         $limit = 12;
     
         $image = Gallery::where('slug', $slug)->firstOrFail();
@@ -53,21 +55,30 @@ class ImageController extends Controller
             ->where('image_status', 1)
             ->where(function ($q) use ($image, $relatedTags) {
                 $q->where('cat_id', $image->cat_id)
-                    ->orWhereIn('tags', $relatedTags->toArray()); // this assumes tags are simple comma-separated strings
+                  ->orWhereIn('tags', $relatedTags->toArray());
             });
     
+        if (!empty($loadedIds)) {
+            $query->whereNotIn('central_id', $loadedIds);
+        }
+    
         $relatedImages = $query
-            ->orderBy('central_id', 'desc')
-            ->skip($offset)
+            ->inRandomOrder()
             ->take($limit)
             ->get();
     
         // Ads
-        $response = Http::get('https://electricaapps.top/ads/api/ad_api.php');
+        if (PlatformHelper::isAndroid()) {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=android');
+        } else {
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=other');
+        }
+    
         $adInterval = 6;
         if ($response->successful()) {
             $adInterval = $response->json()['wallpaper_number'];
         }
+    
         $ads = $this->fetchAdsForCount(count($relatedImages), $adInterval);
     
         $html = view('partials.image_with_ads', [
@@ -76,8 +87,12 @@ class ImageController extends Controller
             'adInterval' => $adInterval
         ])->render();
     
-        return response()->json(['html' => $html]);
+        return response()->json([
+            'html' => $html,
+            'newLoadedIds' => $relatedImages->pluck('central_id')
+        ]);
     }
+    
 
     protected function fetchAdsForCount($requiredCount, $adInterval)
     {

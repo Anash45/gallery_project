@@ -36,11 +36,11 @@ class HomeController extends Controller
 
         // Fetch enough ads from the external API
         $recentAds = $this->fetchAdsForCount(count($recentImages), $adInterval);
-        
+
         // Get top 10 trending searches (most searched)
         $trendingSearches = Search::orderBy('count', 'desc')
-        ->limit(10)
-        ->pluck('query');
+            ->limit(10)
+            ->pluck('query');
 
         return view('home', compact('recentImages', 'recentAds', 'adInterval', 'trendingSearches'));
     }
@@ -49,11 +49,16 @@ class HomeController extends Controller
     public function loadMore(Request $request)
     {
         $offset = $request->input('offset', 0);
+        $loadedIds = $request->input('loadedIds', []); // Get already loaded IDs (array)
 
-        // Load next 30 images
-        $images = Gallery::where('image_status', 1)
-            ->orderBy('central_id', 'desc')
-            ->skip($offset)
+        // Load next 20 random images, excluding already loaded ones
+        $query = Gallery::where('image_status', 1);
+
+        if (!empty($loadedIds)) {
+            $query->whereNotIn('central_id', $loadedIds);
+        }
+
+        $images = $query->inRandomOrder()
             ->take(20)
             ->get();
 
@@ -68,17 +73,15 @@ class HomeController extends Controller
             $adInterval = $response->json()['wallpaper_number'];
         }
 
-        // Fetch enough ads for 30 images
-        $ads = $this->fetchAdsForCount(count($images),$adInterval);
+        $ads = $this->fetchAdsForCount(count($images), $adInterval);
 
-        // Render partial and return as JSON
         $html = view('partials.image_with_ads', [
             'recentImages' => $images,
             'recentAds' => $ads,
             'adInterval' => $adInterval
         ])->render();
 
-        return response()->json(['html' => $html]);
+        return response()->json(['html' => $html, 'newLoadedIds' => $images->pluck('central_id')]);
     }
 
 
@@ -91,7 +94,7 @@ class HomeController extends Controller
 
         // Fetch ads repeatedly until we have enough
         while (count($ads) < $requiredAdsCount) {
-        
+
             if (PlatformHelper::isAndroid()) {
                 $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?platform=android');
             } else {

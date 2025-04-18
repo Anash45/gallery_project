@@ -52,9 +52,9 @@ class CategoryController extends Controller
         
 
         if (PlatformHelper::isAndroid()) {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id.'&platform=android');
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($category->name).'&platform=android');
         } else {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$category->id.'&platform=other');
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($category->name).'&platform=other');
         }
 
         $adInterval = 6;
@@ -62,7 +62,7 @@ class CategoryController extends Controller
             $adInterval = $response->json()['wallpaper_number'];
         }
 
-        $ads = $this->fetchAdsForCount(count($galleryItems),$adInterval, $category->id);
+        $ads = $this->fetchAdsForCount(count($galleryItems),$adInterval, $category->name);
 
         // Set the pagination path
         $galleryItems->withPath("/category/{$slug}/");
@@ -71,7 +71,7 @@ class CategoryController extends Controller
         return view('categories.show', compact('category', 'galleryItems', 'ads', 'adInterval'));
     }
 
-    protected function fetchAdsForCount($requiredCount, $adInterval, $categoryId)
+    protected function fetchAdsForCount($requiredCount, $adInterval, $categoryName)
     {
         // Calculate the required number of ads based on 1 ad for every 5 images
         $requiredAdsCount = ceil($requiredCount / $adInterval);
@@ -82,9 +82,9 @@ class CategoryController extends Controller
         while (count($ads) < $requiredAdsCount) {
 
             if (PlatformHelper::isAndroid()) {
-                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId.'&platform=android');
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($categoryName).'&platform=android');
             } else {
-                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.$categoryId.'&platform=other');
+                $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($categoryName).'&platform=other');
             }
 
             if ($response->successful()) {

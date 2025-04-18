@@ -8,7 +8,7 @@
 @php
     $Title='Home';
     $Title2 = 'Category';
-    $SubTitle = $image->image_name;
+    $SubTitle = null;
 
 @endphp
 @include('partials.Page_Header')
@@ -32,11 +32,6 @@
                 @endphp
                     <div class="d-flex gap-3 justify-content-between align-items-center">
                         <h3 class="team-details__name text-white">{{ $image->image_name }}</h3>
-                        <!-- Like Button -->
-                        <i class="fa fa-thumbs-up h3 cursor-pointer {{ in_array($image->slug, $likedImages ?? []) ? 'text-thm' : '' }}" 
-                            onclick="toggleLike('{{ $image->slug }}')"
-                            id="like-button-{{ $image->slug }}">
-                        </i>
                     </div>
                     <a href="{{ route('categories.show', $category->slug) }}" class="team-details__sub-title text-white text-decoration-underline">{{ $category->category_name }}</a>
                     <p class="team-details__text-1 text-white">{{ $image->description }}</p>
@@ -69,18 +64,27 @@
                         </li>
                     </ul>
                     <a href="{{ route('image.download', $image->slug) }}" class="thm-btn login-page__form-btn">Download <i class="fa fa-download ms-2"></i></a>
-                    <div class="mt-3">
+                    <div class="mt-3 d-flex flex-wrap gap-3">
                         <button type="button" class="thm-btn border-0" data-bs-toggle="modal" data-bs-target="#shareModal"
                             onclick="prepareShareModal('{{ $image->title }}', '{{ url()->current() }}')">
-                            <i class="fa fa-share-square"></i> Share
+                            Share
+                            <i class="fa fa-share-square"></i> 
+                        </button>
+                        <!-- Like Button -->
+                        <button type="button" id="like-button-{{ $image->slug }}"
+                        onclick="toggleLike('{{ $image->slug }}')" class="thm-btn border-0">
+                            <i class="fa fa-thumbs-up h3 cursor-pointer {{ in_array($image->slug, $likedImages ?? []) ? 'text-danger' : '' }}">
+                        </i> 
                         </button>
                     </div>
 
-                    <div id="play-store-button" class="mt-3" style="display: none;">
-                        <a href="#">
-                            <img src="{{ asset('/assets/images/play-store-button.webp') }}" style="height: 55px;" />
-                        </a>
-                    </div>
+                    @if ($image->database->packageName != '')
+                        <div id="play-store-button" class="mt-3" style="display: none;">
+                            <a href="https://play.google.com/store/apps/details?id={{ $image->database->packageName }}" target="_blank">
+                                <img src="{{ asset('/assets/images/play-store-button.webp') }}" style="height: 55px;" />
+                            </a>
+                        </div>
+                    @endif
 
                     <div class="blog-details__bottom">
                         <p class="blog-details__tags gap-1 d-flex flex-wrap">
@@ -111,7 +115,7 @@
         <div class="section-title text-center mt-4">
             <h2 class="section-title__title">Related Images</h2>
         </div>
-        <div class="row justify-content-center" id="related-image-wrapper"></div>
+        <div class="row justify-content-center gallery-row" id="related-image-wrapper"></div>
         <div id="related-loader" class="text-center my-4" style="display: none;">
             <p>Loading related images...</p>
         </div>
@@ -160,35 +164,50 @@
 @endpush
 @push('scripts')
 <script>
-    let relatedOffset = 0;
-    let relatedLoading = false;
+let relatedOffset = 0;
+let relatedLoading = false;
+let relatedLoadedIds = [];
 
-    const loadRelatedImages = () => {
-        if (relatedLoading) return;
-        relatedLoading = true;
-        document.getElementById('related-loader').style.display = 'block';
+const loadRelatedImages = () => {
+    if (relatedLoading) return;
+    relatedLoading = true;
+    document.getElementById('related-loader').style.display = 'block';
 
-        fetch(`/image/{{ $image->slug }}/related?offset=${relatedOffset}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.html.trim() !== '') {
-                    document.getElementById('related-image-wrapper').insertAdjacentHTML('beforeend', data.html);
-                    relatedOffset += 12;
-                    relatedLoading = false;
-                    document.getElementById('related-loader').style.display = 'none';
-                }
-            });
-    };
+    fetch(`/image/{{ $image->slug }}/related`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            offset: relatedOffset,
+            loadedIds: relatedLoadedIds
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.html.trim() !== '') {
+            document.getElementById('related-image-wrapper').insertAdjacentHTML('beforeend', data.html);
+            relatedOffset += 12;
 
-    // Initial load
-    loadRelatedImages();
-
-    // Optional: load more on scroll within page
-    window.addEventListener('scroll', () => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300 && !relatedLoading) {
-            loadRelatedImages();
+            // Update the loaded IDs
+            relatedLoadedIds = relatedLoadedIds.concat(data.newLoadedIds);
         }
+        relatedLoading = false;
+        document.getElementById('related-loader').style.display = 'none';
     });
+};
+
+// Initial load
+loadRelatedImages();
+
+// Load more when scrolling near bottom
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300 && !relatedLoading) {
+        loadRelatedImages();
+    }
+});
+
 </script>
 <script>
     function prepareShareModal(title, url) {
@@ -233,9 +252,9 @@ function toggleLike(slug) {
         // Update icon color based on liked state
         const button = document.getElementById('like-button-' + slug);
         if (data.liked) {
-            button.classList.add('text-thm');
+            button.querySelector('i').classList.add('text-danger');
         } else {
-            button.classList.remove('text-thm');
+            button.querySelector('i').classList.remove('text-danger');
         }
     })
     .catch(error => {

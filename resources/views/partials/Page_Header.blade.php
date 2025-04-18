@@ -10,7 +10,9 @@
                 <li><span class="fa fa-angle-right"></span></li>
                 <li><?php echo $Title2; ?></li>
             </ul>
-            <h2><?php echo $SubTitle; ?></h2>
+            @if ($SubTitle != null)
+                <h2><?php echo $SubTitle; ?></h2>
+            @endif
         </div>
     </div>
 </section>
