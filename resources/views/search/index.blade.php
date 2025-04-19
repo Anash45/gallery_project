@@ -11,7 +11,7 @@
 
 @include('partials.Page_Header')
 
-<section class="projects-page">
+<section class="projects-page search-page">
     <div class="container">
         @include('partials.search-container')
         @if($galleryItems->count())

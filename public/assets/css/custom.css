@@ -364,6 +364,14 @@ main {
     aspect-ratio: 4/6 !important;
 }
 
+.search-page{
+    padding: 50px 0 !important;
+}
+
+.project-details__pagination-box{
+    margin-top: 50px !important;
+}
+
 @media (max-width:768px) {
 
     .custom-cursor__cursor,
@@ -377,7 +385,11 @@ main {
         padding: 140px 0 30px !important;
     }
     .projects-page{
-        padding: 60px 0 !important;
+        padding: 80px 0 50px !important;
+    }
+
+    .search-page{
+        padding: 20px 0 !important;
     }
 
     .page-header__inner h2{

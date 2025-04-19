@@ -73,7 +73,7 @@
                         <!-- Like Button -->
                         <button type="button" id="like-button-{{ $image->slug }}"
                         onclick="toggleLike('{{ $image->slug }}')" class="thm-btn border-0">
-                            <i class="fa fa-thumbs-up h3 cursor-pointer {{ in_array($image->slug, $likedImages ?? []) ? 'text-danger' : '' }}">
+                            <i class="fa fa-thumbs-up h3 cursor-pointer {{ in_array($image->slug, $likedImages ?? []) ? 'text-success' : '' }}">
                         </i> 
                         </button>
                     </div>
@@ -252,9 +252,9 @@ function toggleLike(slug) {
         // Update icon color based on liked state
         const button = document.getElementById('like-button-' + slug);
         if (data.liked) {
-            button.querySelector('i').classList.add('text-danger');
+            button.querySelector('i').classList.add('text-success');
         } else {
-            button.querySelector('i').classList.remove('text-danger');
+            button.querySelector('i').classList.remove('text-success');
         }
     })
     .catch(error => {

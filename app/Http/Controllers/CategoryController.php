@@ -52,9 +52,11 @@ class CategoryController extends Controller
         
 
         if (PlatformHelper::isAndroid()) {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($category->name).'&platform=android');
+            $apiUrl = 'https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower(string: $category->database->database_name).'&platform=android';
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower(string: $category->database->database_name).'&platform=android');
         } else {
-            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($category->name).'&platform=other');
+            $response = Http::get('https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower($category->database->database_name).'&platform=other');
+            $apiUrl = 'https://electricaapps.top/ads/api/ad_api.php?cat='.strtolower(string: $category->database->database_name).'&platform=other';
         }
 
         $adInterval = 6;
@@ -62,13 +64,13 @@ class CategoryController extends Controller
             $adInterval = $response->json()['wallpaper_number'];
         }
 
-        $ads = $this->fetchAdsForCount(count($galleryItems),$adInterval, $category->name);
+        $ads = $this->fetchAdsForCount(count($galleryItems),$adInterval, $category->database->database_name);
 
         // Set the pagination path
         $galleryItems->withPath("/category/{$slug}/");
 
         // Return the view with the category, gallery items, and ads
-        return view('categories.show', compact('category', 'galleryItems', 'ads', 'adInterval'));
+        return view('categories.show', compact('category', 'galleryItems', 'ads', 'adInterval', 'apiUrl'));
     }
 
     protected function fetchAdsForCount($requiredCount, $adInterval, $categoryName)
